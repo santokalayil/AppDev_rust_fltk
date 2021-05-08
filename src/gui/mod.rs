@@ -3,6 +3,7 @@ use fltk::{
     enums::Color, enums::LabelType, enums::Align,
     prelude::*, menu::{MenuBar, MenuItem}, text::TextBuffer,
 };  //
+// use std::{thread, time};
 
 mod elements; // accessing elements folder
 mod logic;
@@ -21,19 +22,6 @@ pub fn start_app() {
     let app = app::App::default(); //.with_scheme(AppScheme::Gtk)
     // app::set_visible_focus(false);
     let mut win = Window::new(window_x, window_y, window_width, window_height, &window_title,);
-    // win.set_color(Color::DarkMagenta);
-
-    // let mut menu = MenuBar::new(0, 0, 800, 40, "hi");
-    // menu.set_color(Color::Red);
-
-    // let mut buf: TextBuffer = TextBuffer::default();
-    // buf.set_tab_distance(4);
-
-
-
-    // MenuItem::new(choices: &[&str])
-    // let file = MenuItem::with_label("File");
-    // let about = MenuItem::with_label("About");
 
     let img = Assets::get("app_icon.png").unwrap(); // these 2 lines to embed if not use line after next line only
     let image = PngImage::from_data(&img).unwrap();
@@ -55,63 +43,63 @@ pub fn start_app() {
     let mut output_label_frame = elements::gen_output_label_frame(0, 0, frame.width(), 50);
     // let mut but = elements::gen_button(frame);
     let mut close_button = Button::default()
-    // .bottom_of(&output_label_frame)
-    .with_size(15,15)
-    .with_label("x");
-    close_button.set_color(Color::from_rgb(255, 0, 0));
+    .with_size(20,20)
+    .right_of(&output_label_frame, -20)
+    .with_align(fltk::Align::Inside | fltk::Align::Center)
+    // .with_align(fltk::Align::Right)
+    .with_label("X");
+    close_button.set_color(Color::from_rgb(200, 200, 200));
+    close_button.set_frame(FrameType::RFlatBox);
+    close_button.set_selection_color(Color::from_rgb(250, 250, 250));
+    close_button.hide();
 
-    // close_button.hide();
-
-
-    // let login_box_width: i32 = window_width;
-    // let login_box_height: i32 = window_height;
-
-    // let mut pack = fltk::group::Pack::new(200, 200, 400, 400,"Enter Credentials");
     let mut pack = fltk::group::Pack::default()
     .center_of(&frame)
     .with_pos(frame.x() + frame.width()/4,  frame.y()+output_label_frame.height()+frame.height()/6)
     .with_size(frame.width() / 2, 400);
-    // .with_label("Enter credentials");
-    // pack.set_frame(FrameType::FlatBox);
-    // pack.set_color(Color::Cyan);
 
     let mut username_label = Frame::new(0, 0, pack.width(), 30, "Username");
-    // let mut username_label = Frame::default().set_label("UserName");
     username_label.set_frame(FrameType::FlatBox);
-    // username_label.set_align(fltk::Align::Left);
+;
     let mut username = fltk::input::Input::new(0, 0, pack.width() ,30, "");
     username.set_value(&format!("{}", ""));
-    username.set_color(Color::Red);
+    username.set_color(Color::from_u32(0xffffff));
     username.set_tooltip("Type your username here");
 
     let mut password_label = Frame::new(0, 0, pack.width(), 30, "Password");
     password_label.set_frame(FrameType::FlatBox);
     let mut password = fltk::input::SecretInput::new(0, 0, pack.width() ,30, "");
     password.set_value(&format!("{}", ""));
+    password.set_color(Color::from_u32(0xffffff));
     password.set_tooltip("Type your password here");
-    let mut login_button = elements::gen_login_button();
-    pack.end();
-    // pack.orientation(Align::vertical);
 
-    // close_button.set_callback(move | x | x.hide());
+    let mut space_after_password = Frame::new(0, 0, pack.width(), 10, "");
+    space_after_password.set_frame(FrameType::FlatBox);
+    let mut login_button = elements::gen_login_button();
+    let mut space_after_loginbtn = Frame::new(0, 0, pack.width(), 30, "");
+    space_after_loginbtn.set_frame(FrameType::FlatBox);
+    pack.end();
+
     let mut clone_close_button = close_button.clone();
-    let mut clone_output_label_frame = output_label_frame.clone();
+    let mut clone_win = win.clone();
     login_button.set_callback( 
         move ||
         if username.value() == "santokalayil".to_string() {
-            // pack.clear();
-            // username.set_value(&format!("succesfull : {}", "Yes"));
             if password.value() == "hi".to_string() {
-                clone_output_label_frame.set_label("Successful Login");
-                pack.hide();
                 clone_close_button.show();
+                pack.hide();
+                clone_win.clear();
             }
             else {
-                clone_output_label_frame.set_label("password incorrect");
+                space_after_loginbtn.set_label_size(16);
+                space_after_loginbtn.set_label_color(Color::from_u32(0xff0000));
+                space_after_loginbtn.set_label("password incorrect");
             }
         }
         else {
-            clone_output_label_frame.set_label("Invalid! Try again");
+            space_after_loginbtn.set_label_size(16);
+            space_after_loginbtn.set_label_color(Color::from_u32(0xff0000));
+            space_after_loginbtn.set_label("Invalid! Try again");
         }
     );
 
@@ -135,7 +123,7 @@ pub fn start_app() {
     // win.show();
 
     // theming
-    app::background(200, 200, 200); // this is the app module imported and not he app
+    app::background(229,229,255); // this is the app module imported and not he app
     
 
     // but.set_callback(move || output_label_frame.set_label("Ecclesiastica v.0.1"));
