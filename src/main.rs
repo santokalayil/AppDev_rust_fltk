@@ -1,4 +1,4 @@
-// #![windows_subsystem = "windows"]  // to hide console window
+#![windows_subsystem = "windows"]  // to hide console window
 
 
 // mod cmd_utilities;
