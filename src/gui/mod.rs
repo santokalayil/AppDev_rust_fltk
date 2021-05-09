@@ -30,21 +30,16 @@ pub fn start_app() {
 
     let img = Assets::get("app_icon.png").unwrap(); // these 2 lines to embed if not use line after next line only
     let image = PngImage::from_data(&img).unwrap();
-    // let image = PngImage::load(&std::path::Path::new("assets/app_icon.png")).unwrap();
 
     win.set_icon(Some(image));
 
-    //let mut frame = Frame::new(0, 0, window_x, window_y, "HIIIII");
     let mut frame = Frame::default().size_of(&win);
     frame.set_frame(FrameType::FlatBox);
-    // frame.set_color(Color::Blue); // now we are setting background in the frame
 
-    // let mut banner_frame = elements::gen_imgbanner(0, 0, frame.width(), 100);
-    let output_label_frame = elements::gen_output_label_frame(0, 0, frame.width(), 50);
-    // let mut but = elements::gen_button(frame);
+    let top_banner_frame = elements::gen_output_label_frame(0, 0, frame.width(), 50);
     let mut close_button = Button::default()
         .with_size(20, 20)
-        .right_of(&output_label_frame, -20)
+        .right_of(&top_banner_frame, -20)
         .with_align(Align::Inside | Align::Center)
         // .with_align(Align::Right)
         .with_label("X");
@@ -53,11 +48,19 @@ pub fn start_app() {
     close_button.set_selection_color(Color::from_rgb(250, 250, 250));
     close_button.hide();
 
+    // login_succesfull message frame that show
+    let mut login_successful_frame = fltk::frame::Frame::default()
+    .with_label("Login Successful").center_of(&frame);
+    login_successful_frame.set_label_color(Color::from_u32(0x0000ff));
+    login_successful_frame.set_label_size(28);
+    login_successful_frame.hide(); // hidden until successful login
+
+    // login box frame section that contains username input, password input and login button
     let mut pack = fltk::group::Pack::default()
         .center_of(&frame)
         .with_pos(
             frame.x() + frame.width() / 4,
-            frame.y() + output_label_frame.height() + frame.height() / 6,
+            frame.y() + top_banner_frame.height() + frame.height() / 6,
         )
         .with_size(frame.width() / 2, 400);
 
@@ -85,12 +88,15 @@ pub fn start_app() {
 
     let mut clone_close_button = close_button.clone();
     let mut clone_pack = pack.clone();
+
+    // this will resized to match the windows size on successful login
     login_button.set_callback(move |_| {
         use logic::*;
         match login_valid(&username.value(), &password.value()) {
             LoginResult::CorrectCredentials => {
                 clone_pack.hide();
                 clone_close_button.show();
+                login_successful_frame.show();
             },
             LoginResult::InvalidPassword => {
                 space_after_loginbtn.set_label_size(16);
@@ -112,7 +118,6 @@ pub fn start_app() {
         pack.show();
     });
 
-    // login_button.set_callback(move |_| logic::login("santokalayil", "hi"));
 
     win.make_resizable(true);
     win.end();
@@ -122,6 +127,5 @@ pub fn start_app() {
     // theming
     app::background(229, 229, 255); // this is the app module imported and not he app
 
-    // but.set_callback(move |_| output_label_frame.set_label("Ecclesiastica v.0.1"));
     app.run().unwrap();
 }
