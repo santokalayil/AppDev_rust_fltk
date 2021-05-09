@@ -1,18 +1,25 @@
 // use fltk::group::Pack::*;
-pub fn login_valid(username:&str, password:&str) {
-    let result = match username {"santokalayil" => true, _ => false};
-    if result == true {
-        println!("hi")
+pub enum LoginResult {
+    CorrectCredentials,
+    InvalidUserName,
+    InvalidPassword,
+}
+
+pub fn login_valid(username: &str, password: &str) -> LoginResult {
+    if username == "santokalayil" {
+        if password == "hi" {
+            LoginResult::CorrectCredentials
+        } else {
+            LoginResult::InvalidPassword
+        }
     } else {
-        println!("nothing")
+        LoginResult::InvalidUserName
     }
 }
 
 // pub fn login(valid:bool, pack:pack) {
 
 // }
-
-
 
 // match number {
 //     // Match a single value

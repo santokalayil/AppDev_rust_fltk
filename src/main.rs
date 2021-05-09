@@ -1,5 +1,4 @@
-#![windows_subsystem = "windows"]  // to hide console window
-
+#![windows_subsystem = "windows"] // to hide console window
 
 // mod cmd_utilities;
 mod gui;
@@ -8,7 +7,6 @@ mod gui;
 // use these if need to embed image
 #[macro_use]
 extern crate rust_embed;
-
 
 fn main() {
     // cmd_utilities::run_command("python".to_string()); // argument needs to be added. find some way like vec or list
