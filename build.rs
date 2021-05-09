@@ -1,5 +1,5 @@
 // build.rs
-// -------- this file is used to set icon (binary_icon.ico) for binary exe ---
+// -------- this file is used to set icon (app_icon.ico) for binary exe ---
 
 #[cfg(windows)]
 extern crate winres;
