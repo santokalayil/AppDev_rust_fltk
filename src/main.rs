@@ -1,4 +1,4 @@
-#![windows_subsystem = "windows"] // to hide console window
+#![windows_subsystem = "windows"] // comment this line to show console window
 
 // mod cmd_utilities;
 mod gui;
