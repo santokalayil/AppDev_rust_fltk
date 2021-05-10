@@ -11,11 +11,12 @@ build = "build.rs"
 
 [dependencies]
 fltk = "^1"
-rust-embed = "5.9"  # to embed image directly to binary without leaving external links
+rust-embed = "5.9.0"  # to embed image directly to binary without leaving external links
+# rust-embed="3.0.0"
 
 # -------- below 2 lines are used to set icon (binary_icon.ico) for binary exe ---
 [target.'cfg(windows)'.build-dependencies]
-winres = "0.1"
+winres = "0.1.11"  # 0.1.11
 
 
 # [dependencies.pyo3]
