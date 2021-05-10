@@ -1,5 +1,6 @@
 use fltk::{
     app,
+    // app::sleep,
     button::*,
     enums::{Align, Color, FrameType},
     frame::*,
@@ -7,7 +8,6 @@ use fltk::{
     prelude::*,
     window::*,
 }; //
-   // use std::{thread, time};
 
 mod elements; // accessing elements folder
 mod logic;
@@ -24,7 +24,7 @@ pub fn start_app() {
     let window_height: i32 = 600;
     let window_title: &str = "Ecclesiastica v.01";
     let app = app::App::default(); //.with_scheme(AppScheme::Gtk)
-                                   // app::set_visible_focus(false);
+    app::set_visible_focus(false);
     let mut win = Window::new(window_x, window_y, window_width, window_height, None)
         .with_label(&window_title);
 
@@ -84,29 +84,34 @@ pub fn start_app() {
     let mut login_button = elements::gen_login_button();
     let mut space_after_loginbtn = Frame::new(0, 0, pack.width(), 30, "");
     space_after_loginbtn.set_frame(FrameType::FlatBox);
+    space_after_loginbtn.set_label_size(16);
     pack.end();
 
     let mut clone_close_button = close_button.clone();
     let mut clone_pack = pack.clone();
+    let mut clone_login_successful_frame = login_successful_frame.clone();
+    let mut clone_space_after_loginbtn = space_after_loginbtn.clone();
+    let clone_username = username.clone();
+    let clone_password = password.clone();
 
     // this will resized to match the windows size on successful login
     login_button.set_callback(move |_| {
         use logic::*;
-        match login_valid(&username.value(), &password.value()) {
+        match login_valid(&clone_username.value(), &clone_password.value()) {
             LoginResult::CorrectCredentials => {
+                clone_space_after_loginbtn.set_label_color(Color::from_u32(0x00ff00));
+                clone_space_after_loginbtn.set_label("Successful!");
                 clone_pack.hide();
                 clone_close_button.show();
-                login_successful_frame.show();
+                clone_login_successful_frame.show();  
             },
             LoginResult::InvalidPassword => {
-                space_after_loginbtn.set_label_size(16);
-                space_after_loginbtn.set_label_color(Color::from_u32(0xff0000));
-                space_after_loginbtn.set_label("password incorrect");
+                clone_space_after_loginbtn.set_label_color(Color::from_u32(0xff0000));
+                clone_space_after_loginbtn.set_label("Password incorrect");
             },
             LoginResult::InvalidUserName => {
-                space_after_loginbtn.set_label_size(16);
-                space_after_loginbtn.set_label_color(Color::from_u32(0xff0000));
-                space_after_loginbtn.set_label("Invalid! Try again");
+                clone_space_after_loginbtn.set_label_color(Color::from_u32(0xff0000));
+                clone_space_after_loginbtn.set_label("Invalid! Try again");
             },
 
         }
@@ -115,6 +120,12 @@ pub fn start_app() {
     let mut clone_close_button = close_button.clone();
     close_button.set_callback(move |_| {
         clone_close_button.hide();
+        login_successful_frame.hide();
+        space_after_loginbtn.set_label("");
+        password.set_value("");
+        username.set_value("");
+        // username.deactivate();
+        
         pack.show();
     });
 
